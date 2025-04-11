@@ -1,0 +1,41 @@
+% Load the mammogram image (replace with your image path)
+mammogram1 = imgetfile();
+mammogram=imread(mammogram1)
+
+% Display the original mammogram
+subplot(1, 2, 1);
+imshow(mammogram);
+title('Original Mammogram');
+
+% Preprocess the image (e.g., noise removal, contrast enhancement)
+% You can use techniques like median filtering, histogram equalization, etc.
+
+% Apply thresholding to segment the breast area
+threshold = graythresh(mammogram);
+binaryMammogram = imbinarize(mammogram, threshold);
+
+% Remove small objects (noise) from the binary image
+binaryMammogram = bwareaopen(binaryMammogram, 500);
+
+% Fill holes in the breast region
+binaryMammogram = imfill(binaryMammogram, 'holes');
+
+% Display the segmented breast region
+subplot(1, 2, 2);
+imshow(binaryMammogram);
+title('Segmented Breast Region');
+
+% Perform feature extraction and classification
+% You would typically extract features from the segmented region
+% and use a machine learning classifier to detect cancerous regions.
+
+% Example: Calculate the area of the segmented region
+regionProps = regionprops(binaryMammogram, 'Area');
+area = regionProps.Area;
+
+% Example: Classify the region as cancerous or non-cancerous based on features
+if area > 10  % You need to set an appropriate threshold
+    fprintf('Cancerous region detected.\n');
+else
+    fprintf('Non-cancerous region detected.\n');
+end
